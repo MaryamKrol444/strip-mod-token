@@ -60,5 +60,5 @@ Domena nie jest potrzebna do pierwszej publikacji. Jeśli później ją podłąc
 ## Ważne przed traktowaniem strony jako gotowego serwisu produkcyjnego
 
 Techniczna publikacja nie zastępuje uzupełnienia informacji prawnych i redakcyjnych. Nadal trzeba podać prawdziwe dane wydawcy, prywatny kontakt w sprawach prywatności, informacje o hostingu/logach i faktyczne relacje afiliacyjne, jeśli istnieją. Nie zostały one wymyślone. Obecne polityki ujawniają te braki. Publiczne zgłoszenia GitHub służą wyłącznie do niesensytywnych korekt redakcyjnych.
-
+Pages włączone
 Treść dotyczy branży 18+, ale nie zawiera nagości ani instrukcji obchodzenia zabezpieczeń. Wydawca odpowiada za zgodność materiałów i sposobu monetyzacji z bieżącymi zasadami GitHuba oraz lokalnym prawem. Zasady platform i promocje trzeba ponownie sprawdzić przed komercyjnym uruchomieniem. Szczegóły wykluczonych linków i ostrzeżenia przy filmie opisuje `LINK_AUDIT.md`.
