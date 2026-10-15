@@ -25,6 +25,14 @@ def validate(path,core=False):
     name=path
     check(len(soup.find_all('h1'))==1,name+' exactly one H1')
     check(soup.html.get('lang')=='en',name+' language')
+    verification=soup.select('meta[name="google-site-verification"]')
+    if path=='/':
+        check(len(verification)==1,name+' exactly one GSC verification tag')
+        if verification:
+            check(verification[0].parent==soup.head,name+' GSC tag belongs in head')
+            check(verification[0].get('content')=='bcjswv_sCJ61Ggfz8DWOakYpehVngbXfnLkUBVX6VWg',name+' exact GSC verification value')
+    else:
+        check(not verification,name+' GSC tag is homepage-only')
     check(bool(soup.select_one('a.skip-link[href="#main"]')),name+' skip link')
     check(bool(soup.select_one('main#main')),name+' main landmark')
     check(len(soup.title.get_text())<=60,name+' title <=60')
