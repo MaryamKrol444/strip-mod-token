@@ -69,6 +69,17 @@ def validate(path,core=False):
             with Image.open(fileimg) as im:check(im.size==(int(img['width']),int(img['height'])),name+' actual image dimensions')
     check(bool(soup.select_one('.disclosure')),name+' 18+ and affiliate notice')
     check(bool(soup.select_one('.author-box')),name+' author box')
+    bars=soup.select('.draw-bar')
+    check(len(bars)==1,name+' exactly one site-wide draw notice')
+    if bars:
+        bar=bars[0]
+        link=bar.select_one('a.draw-bar-link')
+        check(bool(link) and link.get('href')=='https://striptokens.live',name+' requested draw destination')
+        check(all(rel in link.get('rel',[]) for rel in ('sponsored','nofollow','noopener')),name+' draw link disclosure attributes')
+        check('Chance to win, not guaranteed.' in bar.get_text(),name+' chance-based draw disclosure')
+        check('External promotional guide' in bar.get_text(),name+' external guide disclosure')
+        check(bool(bar.select_one('.draw-gift svg')),name+' gift icon')
+        check(bool(bar.select_one('button[aria-label="Dismiss hourly draw notice"]')),name+' accessible dismissal')
     if not core:return
     page=next(p for p in PAGES if p['path']==path)
     check(page['primary'] in soup.h1.get_text().lower(),name+' primary keyword in H1')

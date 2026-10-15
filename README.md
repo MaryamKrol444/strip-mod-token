@@ -26,6 +26,12 @@ Run `.venv/bin/python scripts/package_site.py` to create the downloadable `openr
 
 Also deploy `assets/`, `sitemap.xml` and `robots.txt`. Each HTML document is complete and readable without JavaScript; CSS and images are shared local files. Clean directory routes work with ordinary static hosting.
 
+## Site-wide draw notice
+
+Every page includes a bottom-fixed gift-icon notice: **50 TOKENS — FREE HOURLY DRAW**. It links to the requested `https://striptokens.live` homepage as an **external promotional guide**, not an official entry or guaranteed award. The visible copy says **Chance to win, not guaranteed** and instructs visitors to verify official terms. The destination was reviewed as informational content rejecting generators and modified apps; its unsupported bonus, prize and zero-risk claims are not endorsed. See the additional dated entry in `LINK_AUDIT.md`.
+
+The notice uses a real sponsored/nofollow/noopener anchor, new-tab disclosure, keyboard-visible focus and at least 44px controls. It can be dismissed on the current page, without cookies or storage. Space is reserved below the footer and for keyboard focus so that content is not trapped under it. It remains usable without JavaScript (the nonfunctional close control is hidden) and is omitted when printing. This shared notice is separate from the in-article CTA counts in the table.
+
 ## Editorial decisions and exceptions
 
 Read **[LINK_AUDIT.md](LINK_AUDIT.md)** before changing CTAs.
@@ -48,7 +54,7 @@ This server accepts the preview proxy host, uses relative asset paths, permits e
 
 ## Editing and rebuilding
 
-Generated HTML is checked in as requested. Edit `content/*.md` for the four articles; shared layout, metadata, source notes and supporting-page text live in `scripts/build.py`. Edit `assets/styles.css` for appearance and `assets/video.js` for the opt-in player.
+Generated HTML is checked in as requested. Edit `content/*.md` for the four articles; shared layout, metadata, source notes and supporting-page text live in `scripts/build.py`. Edit `assets/styles.css` for appearance, `assets/video.js` for the opt-in player and `assets/draw-bar.js` for notice dismissal and reserved space.
 
 ```sh
 python3 -m venv .venv
@@ -90,4 +96,4 @@ The deterministic test covers all nine documents: title/description limits, one 
 
 Browser checks use npm-packaged Chromium (no separate browser download), Playwright and axe-core. They inspect all nine pages at **1440px and 390px**, check horizontal overflow, WCAG A/AA automated rules, keyboard skip links, image decoding, TOC behavior, third-party requests before consent, opt-in playback creation, no-JavaScript content and private-file denial. The player request is intercepted in QA; playback availability on YouTube is **not** certified. Local screenshots go to ignored `.cache/qa/`.
 
-Automated axe results are not a full manual accessibility certification. No field Core Web Vitals or Lighthouse score is claimed. The implementation uses system fonts, small shared CSS, 20 small WebPs across four pages, no framework and a tiny optional-player script to keep the baseline light. FAQPage markup matches visible answers; search engines decide eligibility for rich results and no rich-result placement is promised.
+Automated axe results are not a full manual accessibility certification. No field Core Web Vitals or Lighthouse score is claimed. The implementation uses system fonts, small shared CSS, 20 small WebPs across four pages, no framework and two small local scripts for the optional player and dismissible notice to keep the baseline light. FAQPage markup matches visible answers; search engines decide eligibility for rich results and no rich-result placement is promised.

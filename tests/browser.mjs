@@ -35,10 +35,30 @@ for (const width of [1440,390]) {
     if(focused!=='Skip to content')errors.push(`${width} ${route} first focus is not skip link`);
     await page.keyboard.press('Enter');
     if(await page.evaluate(()=>location.hash)!=='#main')errors.push(`${width} ${route} skip link does not work`);
+    const mainTop=await page.locator('#main').evaluate(el=>el.getBoundingClientRect().top);
+    if(mainTop < -100 || mainTop > 100)errors.push(`${width} ${route} skip link moved away from the start of main content`);
     if(route==='/'){
       await page.goto(base+route,{waitUntil:'networkidle'});
       await page.screenshot({path:`.cache/qa/home-${width}.png`,fullPage:false});
     }
+    const drawBar=page.locator('.draw-bar');
+    if(await drawBar.count()!==1 || !await drawBar.isVisible())errors.push(`${width} ${route} draw notice missing`);
+    const geometry=await drawBar.evaluate(el=>({position:getComputedStyle(el).position,top:el.getBoundingClientRect().top,bottom:el.getBoundingClientRect().bottom,viewport:innerHeight,height:el.offsetHeight,padding:parseFloat(getComputedStyle(document.body).paddingBottom)}));
+    if(geometry.position!=='fixed' || Math.abs(geometry.bottom-geometry.viewport)>1 || geometry.top<0)errors.push(`${width} ${route} draw notice not pinned inside viewport`);
+    if(geometry.padding<geometry.height)errors.push(`${width} ${route} insufficient reserved space for draw notice`);
+    const drawLink=drawBar.locator('a');
+    const close=drawBar.locator('button');
+    for(const target of [drawLink,close]){
+      const box=await target.boundingBox();
+      if(!box || box.height<44 || box.width<44)errors.push(`${width} ${route} undersized draw tap target`);
+    }
+    await page.locator('.back-top').focus();
+    const footerBottom=await page.locator('.back-top').evaluate(el=>el.getBoundingClientRect().bottom);
+    const barTop=await drawBar.evaluate(el=>el.getBoundingClientRect().top);
+    if(footerBottom>barTop)errors.push(`${width} ${route} footer focus obscured by notice`);
+    await close.focus();await page.keyboard.press('Enter');
+    if(await drawBar.isVisible())errors.push(`${width} ${route} dismissal did not hide notice`);
+    if(await page.evaluate(()=>document.activeElement?.classList.contains('back-top'))!==true)errors.push(`${width} ${route} dismissal did not restore focus`);
     console.log(`Checked ${width}px ${route}`);
   }
   // Local anchor, image sizing, and opt-in video behavior.
@@ -69,9 +89,11 @@ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:
 const page=await context.newPage();await page.goto(base);
 if(await page.locator('h2').count()<10)errors.push('No-JS content missing');
 if(await page.locator('noscript a').count()!==1)errors.push('No-JS video fallback missing');
+if(!await page.locator('.draw-bar').isVisible())errors.push('No-JS draw notice missing');
+if(await page.locator('.draw-bar-close').isVisible())errors.push('Nonfunctional close control shown without JavaScript');
 await page.locator('.toc a').first().click();
 if(!(await page.evaluate(()=>location.hash)))errors.push('No-JS TOC failed');
 const secret=await page.request.get(base+'/.git/config');if(secret.status()!==404)errors.push('Server exposes repository metadata');
 await context.close();await browser.close();
 if(errors.length){console.error(errors.join('\n'));process.exit(1)}
-console.log('PASS: 18 responsive page checks, WCAG A/AA axe scans, keyboard skip links, TOC, images, no pre-consent third-party requests, opt-in video, no-JS content and private-file denial.');
+console.log('PASS: 18 responsive page checks, WCAG A/AA axe scans, keyboard skip links, TOC, images, no pre-consent third-party requests, opt-in video, site-wide fixed/dismissible draw notices, no-JS content and private-file denial.');

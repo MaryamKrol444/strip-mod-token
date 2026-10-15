@@ -1,4 +1,4 @@
-"""Render complete, crawlable HTML pages; JS is only used for opt-in video playback."""
+"""Render complete HTML pages; JS enhances opt-in video and the dismissible draw notice."""
 from pathlib import Path
 import os, re, json
 from html import escape
@@ -192,6 +192,17 @@ def footer(path):
     links=''.join(f'<a href="/{key}/">{title}</a>' for key,(title,_,__) in LEGAL.items())
     return f'''<footer class="site-footer"><div class="footer-top"><a class="brand" href="/">openroom<span class="brand-sub">INDEPENDENT FIELD NOTES</span></a><p>Read the terms.<br>Keep your boundaries.</p><a href="#top" class="back-top">Back to top ↑</a></div><div class="footer-links"><nav aria-label="Footer guides">{nav(path)}</nav><nav aria-label="Publication information">{links}</nav></div><div class="footer-bottom"><span>© 2026 OpenRoom · 18+ only</span><p>Independent commentary. Not an official platform or support service. External commercial resource links are marked sponsored/nofollow. Prices and access rules can change.</p></div></footer>'''
 
+def draw_bar():
+    # A chance-based draw must not be presented as a guaranteed claim.
+    # This is an external promotional guide, not the official entry interface.
+    return '''<aside class="draw-bar" aria-label="Hourly draw external resource">
+<div class="draw-bar-inner">
+<span class="draw-gift" aria-hidden="true"><svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15h22v13H5zM3 9h26v6H3zM16 9v19"/><path d="M16 9c-8 0-11-1-10-5 1-4 8-1 10 5zm0 0c8 0 11-1 10-5-1-4-8-1-10 5z"/></svg></span>
+<div class="draw-bar-copy"><span class="draw-bar-label">Related resource · 18+</span><strong>50 TOKENS — FREE HOURLY DRAW</strong><p>Chance to win, not guaranteed. External promotional guide; verify official terms.</p></div>
+<a class="draw-bar-link" href="https://striptokens.live" target="_blank" rel="sponsored nofollow noopener">Read draw guide <span aria-hidden="true">↗</span><span class="visually-hidden"> on striptokens.live (opens in a new tab)</span></a>
+<button class="draw-bar-close" type="button" aria-label="Dismiss hourly draw notice" hidden><span aria-hidden="true">×</span></button>
+</div></aside>'''
+
 DISCLOSURE='''<aside class="disclosure" aria-label="Adult notice and affiliate disclosure"><p><strong>18+ notice.</strong> For adults who meet the legal age and access rules in their location. No explicit imagery is published here.</p><p><strong>Affiliate disclosure.</strong> External resource buttons lead to commercial publishers and are marked sponsored/nofollow conservatively. No affiliate commission arrangement has been verified for this build. They are not official support. <a href="/disclaimer/">Read the full disclosure</a>.</p></aside>'''
 
 def render_content(raw):
@@ -249,7 +260,7 @@ def schema(page,soup):
 def shell(page,body,structured=''):
     title=escape(page['title']); desc=escape(page['description']); url=escape(BASE+page['path'])
     document=f'''<!doctype html>
-<html lang="en" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title}</title><meta name="description" content="{desc}"><meta name="robots" content="index,follow"><meta name="theme-color" content="#f6f4ed"><meta name="referrer" content="strict-origin-when-cross-origin"><link rel="canonical" href="{url}"><meta property="og:type" content="article"><meta property="og:site_name" content="OpenRoom"><meta property="og:title" content="{title}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{url}"><meta property="og:image" content="{escape(BASE)}/assets/images/social.webp"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="OpenRoom: clear guides, no false promises"><meta property="og:locale" content="en_GB"><meta property="article:modified_time" content="{DATE}T00:00:00Z"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/styles.css">{structured}<script src="/assets/video.js" defer></script></head><body>{header(page['path'])}{body}{footer(page['path'])}</body></html>'''
+<html lang="en" id="top"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title}</title><meta name="description" content="{desc}"><meta name="robots" content="index,follow"><meta name="theme-color" content="#f6f4ed"><meta name="referrer" content="strict-origin-when-cross-origin"><link rel="canonical" href="{url}"><meta property="og:type" content="article"><meta property="og:site_name" content="OpenRoom"><meta property="og:title" content="{title}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{url}"><meta property="og:image" content="{escape(BASE)}/assets/images/social.webp"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="OpenRoom: clear guides, no false promises"><meta property="og:locale" content="en_GB"><meta property="article:modified_time" content="{DATE}T00:00:00Z"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/assets/styles.css">{structured}<script src="/assets/video.js" defer></script><script src="/assets/draw-bar.js" defer></script></head><body class="has-draw-bar">{header(page['path'])}{body}{footer(page['path'])}{draw_bar()}</body></html>'''
     # Project Pages uses /repository-name/ rather than the domain root.
     # Only root-relative HTML href/src attributes are rewritten; external URLs,
     # fragments and canonical/structured-data URLs remain intact.
