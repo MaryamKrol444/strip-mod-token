@@ -26,7 +26,7 @@ Integracja mogła odczytać repozytorium, ale próba włączenia Pages przez API
 3. W sekcji **Build and deployment** ustaw **Source → GitHub Actions**. Nie wybieraj „Deploy from a branch”; przygotowany workflow sam zbuduje i prześle pliki strony.
 4. Otwórz **Actions**:
    https://github.com/MaryamKrol444/strip-mod-token/actions
-5. Wybierz przebieg **Deploy OpenRoom to GitHub Pages** dla gałęzi `arena/385c2232-strip-mod-token`. Jeżeli wcześniejsze uruchomienie nie powiodło się przed włączeniem Pages, wybierz **Re-run all jobs**.
+5. Wybierz przebieg **Deploy OpenRoom to GitHub Pages** dla gałęzi `arena/385c2232-strip-mod-token`. Jeżeli wcześniejsze uruchomienie nie powiodło się przed włączeniem Pages, wybierz **Re-run all jobs**. **Jeżeli nie ma żadnego przebiegu**, przejdź do zakładki **Code**, wybierz gałąź `arena/385c2232-strip-mod-token`, otwórz ten plik (`WDROZENIE.md`), kliknij ikonę ołówka, dodaj np. notatkę „Pages włączone” i wybierz **Commit changes** bezpośrednio na tej samej gałęzi. Taki commit wykonany z Twojego konta uruchomi publikację. Integracja nie miała również uprawnienia do ręcznego uruchomienia workflow (HTTP 403), dlatego nie zakładamy, że początkowy przebieg już istnieje.
 6. Poczekaj, aż zadania **build** i **deploy** będą zielone. Otwórz adres wyświetlony w zadaniu **deploy**, w sekcji **Deployments** lub na stronie **Settings → Pages**.
 7. Sprawdź stronę główną i co najmniej jedną podstronę oraz obraz. Pełny adres zawiera `/strip-mod-token/` — samo `maryamkrol444.github.io` to inny adres.
 
