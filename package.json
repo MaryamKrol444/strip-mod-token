@@ -1,0 +1,17 @@
+{
+  "name": "openroom-static-guides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Accessible static editorial guides; Node dependencies are QA-only.",
+  "scripts": {
+    "build": ".venv/bin/python scripts/build.py",
+    "start": "python3 scripts/serve.py",
+    "test": ".venv/bin/python tests/check_site.py",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@sparticuz/chromium": "^143.0.4",
+    "playwright-core": "^1.57.0"
+  }
+}
